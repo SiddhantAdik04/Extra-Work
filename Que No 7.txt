@@ -1,0 +1,64 @@
+Microsoft Windows [Version 10.0.26100.4770]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.4\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor. Commands end with ; or \g.
+Your MySQL connection id is 22
+Server version: 9.4.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use demo;
+Database changed
+mysql> create table Department (DeptNo int primary key,Dname varchar(30));
+Query OK, 0 rows affected (0.318 sec)
+
+mysql> create table Employee (Empno int primary key, Ename varchar(30),DeptNo int,Salary numeric(10,2), foreign key (DeptNo) references Department(DeptNo));
+Query OK, 0 rows affected (0.362 sec)
+
+mysql> insert into Department values
+-> (1, 'math'),
+-> (2, 'physics'),
+-> (3, 'computer');
+Query OK, 3 rows affected (0.067 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+
+mysql> insert into Employee values (101, 'siddhant', 1, 80000), (102, 'sakshi', 1, 70000),
+-> (103, 'aditi', 2, 65000), (104, 'pranit', 3, 56000), (105, 'bhakti', 1, 85000);
+Query OK, 5 rows affected (0.085 sec)
+Records: 5 Duplicates: 0 Warnings: 0
+
+mysql> delete from Employee where DeptNo in (select DeptNo from Department where Dname = 'math');
+Query OK, 3 rows affected (0.049 sec)
+
+mysql> update Employee set Salary = Salary*1.10 where DeptNo = (select DeptNo from Department where Dname = 'computer');
+Query OK, 1 row affected (0.060 sec)
+Rows matched: 1 Changed: 1 Warnings: 0
+
+mysql> select * from Department;
++--------+----------+
+| DeptNo | Dname |
++--------+----------+
+| 1 | math |
+| 2 | physics |
+| 3 | computer |
++--------+----------+
+3 rows in set (0.010 sec)
+
+mysql> select * from Employee;
++-------+--------+--------+----------+
+| Empno | Ename | DeptNo | Salary |
++-------+--------+--------+----------+
+| 103 | aditi | 2 | 65000.00 |
+| 104 | pranit | 3 | 61600.00 |
++-------+--------+--------+----------+
+2 rows in set (0.010 sec)
+
+mysql> 
