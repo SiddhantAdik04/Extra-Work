@@ -1,0 +1,68 @@
+Microsoft Windows [Version 10.0.26100.4770]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.4\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor. Commands end with ; or \g.
+Your MySQL connection id is 19
+Server version: 9.4.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database book;
+Query OK, 1 row affected (0.091 sec)
+
+mysql> use book;
+Database changed
+mysql> create table schemaEmployee(empno int,name varchar(20),office varchar(20),age int);
+Query OK, 0 rows affected (0.339 sec)
+
+mysql> create table Books(isbn int ,title varchar(20),authors varchar(20),publisher varchar(20));
+Query OK, 0 rows affected (0.251 sec)
+
+mysql> create table Loan(empno int, isbn int,date date);
+Query OK, 0 rows affected (0.257 sec)
+
+mysql> INSERT INTO schemaEmployee (empno, name, office, age) VALUES ^C
+mysql> INSERT INTO schemaEmployee (empno, name, office, age) VALUES (1,'gaurav','mumbai',40), (2,'Tejas','pune',38), (3,'Kishor','Delhi',45), (4,'Pranav','baramati',42), (5,'Mauli','Latur',39);
+Query OK, 5 rows affected (0.072 sec)
+Records: 5 Duplicates: 0 Warnings: 0
+
+mysql> INSERT INTO Books (isbn, title, authors, publisher) VALUES (101, 'DBMS Concepts', 'Korth', 'McGraw-Hill'), (102, 'Data Structures', 'Seymour', 'McGraw-Hill'), (103, 'Operating Systems', 'Silberschatz', 'Pearson'), (104, 'Networking', 'Tanenbaum', 'McGraw-Hill'), (105, 'Java Programming', 'Deitel', 'Pearson'), (106, 'Python Basics', 'Guido', 'McGraw-Hill'), (107, 'Algorithms', 'Cormen', 'McGraw-Hill'), (108, 'AI Fundamentals', 'Russell', 'Pearson');
+Query OK, 8 rows affected (0.098 sec)
+Records: 8 Duplicates: 0 Warnings: 0
+
+mysql> INSERT INTO Loan (empno, isbn, date) VALUES (1, 101, '2025-08-01'), (1, 102, '2025-08-02'), (1, 104, '2025-08-05'), (1, 106, '2025-08-06'), (1, 107, '2025-08-08'), (2, 101, '2025-08-01'), (2, 102, '2025-08-03'), (3, 103, '2025-08-02'), (3, 105, '2025-08-04'), (4, 104, '2025-08-05'), (4, 106, '2025-08-06'), (4, 107, '2025-08-07'), (5, 101, '2025-08-01'), (5, 102, '2025-08-02'), (5, 104, '2025-08-03'), (5, 106, '2025-08-04'), (5, 107, '2025-08-05');
+Query OK, 17 rows affected (0.103 sec)
+Records: 17 Duplicates: 0 Warnings: 0
+
+mysql> select distinct e.name from schemaemployee e join loan l on e.empno=l.empno join books b on l.isbn=b.isbn where b.publisher='McGraw-Hill';
++--------+
+| name |
++--------+
+| gaurav |
+| Tejas |
+| Pranav |
+| Mauli |
++--------+
+4 rows in set (0.071 sec)
+
+mysql> select e.name from schemaemployee e where not exists (select 1 from books b where b.publisher='McGraw-Hill' and not exists (select 1 from loan l where l.empno=e.empno and l.isbn=b.isbn));
++--------+
+| name |
++--------+
+| gaurav |
+| Mauli |
++--------+
+2 rows in set (0.044 sec)
+
+mysql> select e.name from schemaemployee e join loan l on e.empno=l.empno join books b on l.isbn=b.isbn where b.publisher='McGraw-Hill' group by e.empno, e.name having count(distinct b.isbn)>5;
+Empty set (0.141 sec)
+
+mysql>
