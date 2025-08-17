@@ -1,0 +1,119 @@
+Microsoft Windows [Version 10.0.26100.4770]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.4\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor. Commands end with ; or \g.
+Your MySQL connection id is 17
+Server version: 9.4.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database xyz;
+Query OK, 1 row affected (0.111 sec)
+
+mysql> use xyz;
+Database changed
+mysql> create table employee(Emp_no int, Name varchar(20), Emp_city varchar(20));
+Query OK, 0 rows affected (0.295 sec)
+
+mysql> create table company(Emp_no int ,Company_name varchar(20), Salary int);
+Query OK, 0 rows affected (0.267 sec)
+
+mysql> drop table employee;
+Query OK, 0 rows affected (0.227 sec)
+
+mysql> drop table company;
+Query OK, 0 rows affected (0.189 sec)
+
+mysql> create table employee(Emp_no int PRIMARY KEY, Name varchar(20), Emp_city varchar(20));
+Query OK, 0 rows affected (0.203 sec)
+
+mysql> create table company(Emp_no int ,Company_name varchar(20), Salary int);
+Query OK, 0 rows affected (0.227 sec)
+
+mysql> insert into employee(Emp_no, Name, Emp_city) values (1, 'divya', 'latur'), (2, 'trupti', 'ausa'), (3, 'priya', 'jalna'), (4, 'bhakti', 'pune');
+Query OK, 4 rows affected (0.080 sec)
+Records: 4 Duplicates: 0 Warnings: 0
+
+mysql> insert into company(Emp_no, Company_name, Salary) values (1,'Infosys',70000), (2,'TCS',66000), (3,'Wipro',65000), ^C
+-> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '^C' at line 1
+mysql> insert into company(Emp_no, Company_name, Salary) values (1,'Infosys',70000), (2,'TCS',66000), (3,'Wipro',65000), ^C;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '^C' at line 1
+mysql> insert into company(Emp_no, Company_name, Salary) values (1,'Infosys',70000), (2,'TCS',66000), (3,'Wipro',65000);
+Query OK, 3 rows affected (0.060 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+
+mysql> insert into company(Emp_no, Company_name, Salary) values (1,'Infosys',70000), (2,'TCS',66000), (3,'Wipro',65000); (4,'Google',700000);
+Query OK, 3 rows affected (0.051 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '4,'Google',700000)' at line 1
+mysql> select Name,Company_name from employee,company;
++--------+--------------+
+| Name | Company_name |
++--------+--------------+
+| bhakti | Infosys |
+| priya | Infosys |
+| trupti | Infosys |
+| divya | Infosys |
+| bhakti | TCS |
+| priya | TCS |
+| trupti | TCS |
+| divya | TCS |
+| bhakti | Wipro |
+| priya | Wipro |
+| trupti | Wipro |
+| divya | Wipro |
+| bhakti | Infosys |
+| priya | Infosys |
+| trupti | Infosys |
+| divya | Infosys |
+| bhakti | TCS |
+| priya | TCS |
+| trupti | TCS |
+| divya | TCS |
+| bhakti | Wipro |
+| priya | Wipro |
+| trupti | Wipro |
+| divya | Wipro |
++--------+--------------+
+24 rows in set (0.014 sec)
+
+mysql> select e.name,c.Company_name from employee e, company c where e.Emp_no=c.Emp_no;
++--------+--------------+
+| name | Company_name |
++--------+--------------+
+| divya | Infosys |
+| trupti | TCS |
+| priya | Wipro |
+| divya | Infosys |
+| trupti | TCS |
+| priya | Wipro |
++--------+--------------+
+6 rows in set (0.053 sec)
+
+mysql> SELECT e.Name AS employeeName, e.Emp_city AS employeecity, c.Company_name AS companyname, c.salary FROM employee e JOIN company c ON e.Emp_no = c.Emp_no WHERE c.salary > 10000;
++--------------+--------------+-------------+--------+
+| employeeName | employeecity | companyname | salary |
++--------------+--------------+-------------+--------+
+| divya | latur | Infosys | 70000 |
+| trupti | ausa | TCS | 66000 |
+| priya | jalna | Wipro | 65000 |
+| divya | latur | Infosys | 70000 |
+| trupti | ausa | TCS | 66000 |
+| priya | jalna | Wipro | 65000 |
++--------------+--------------+-------------+--------+
+6 rows in set (0.018 sec)
+
+mysql> select Name as employeename, Emp_city as employeecity from employee where Emp_no in(select Emp_no from company where Company_name='Google');
+Empty set (0.017 sec)
+
+mysql>
